@@ -2,20 +2,25 @@
   "name": "rfc6902-apply",
   "version": "1.0.0",
   "description": "Allows patching a object using a patch created with RFC 6902.",
-  "source": "index.js",
+  "source": "src/index.js",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
-    "test": "node test/test.js",
+    "test": "eslint ./src ./test && node ./test/test.js",
     "build": "microbundle",
-    "dev": "microbundle watch"
+    "dev": "microbundle watch",
+    "lint": "eslint ./src ./test --fix"
   },
   "author": "Henrik Olsson <henrik.olsson@outlook.com>",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0",
     "microbundle": "^0.11.0"
   },
-  "dependencies": {
-    "eslint": "^5.16.0"
-  }
+  "dependencies": {}
 }
