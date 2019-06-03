@@ -1,0 +1,21 @@
+{
+  "name": "rfc6902-apply",
+  "version": "1.0.0",
+  "description": "Allows patching a object using a patch created with RFC 6902.",
+  "source": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "scripts": {
+    "test": "node test/test.js",
+    "build": "microbundle",
+    "dev": "microbundle watch"
+  },
+  "author": "Henrik Olsson",
+  "license": "MIT",
+  "devDependencies": {
+    "microbundle": "^0.11.0"
+  },
+  "dependencies": {
+    "eslint": "^5.16.0"
+  }
+}
