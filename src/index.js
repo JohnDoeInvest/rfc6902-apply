@@ -162,6 +162,4 @@ function compare (obj1, obj2) {
   return true
 };
 
-module.exports = {
-  apply
-}
+export default { apply }
