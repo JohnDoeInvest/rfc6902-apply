@@ -1,4 +1,4 @@
-const rfc6902 = require('../src/index.js')
+const rfc6902 = require('../dist/index.js')
 const assert = require('assert')
 
 /**

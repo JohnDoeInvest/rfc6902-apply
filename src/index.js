@@ -28,14 +28,11 @@ function apply (base, patch) {
         throw new Error("Parameter 'value' required")
       }
       handleOperation((current, pathPart) => {
-        let value
-        if (Array.isArray(current)) {
-          const index = pathPart === '-' ? current.length - 1 : pathPart
-          value = current[index]
-        } else {
-          value = current[pathPart]
-        }
+        const key = Array.isArray(current)
+          ? (pathPart === '-' ? current.length - 1 : pathPart)
+          : pathPart
 
+        const value = current[key]
         if (!compare(value, operation.value)) {
           throw new Error('string not equivalent')
         }
@@ -51,7 +48,7 @@ function apply (base, patch) {
 function addOrReplace (base, path, value, replace) {
   handleOperation((current, pathPart) => {
     if (Array.isArray(current)) {
-      if (pathPart !== '-' && Number.isNaN(Number.parseInt(pathPart))) {
+      if (pathPart !== '-' && Number.isNaN(pathPart)) {
         throw new Error('Object operation on array')
       }
 
@@ -61,11 +58,7 @@ function addOrReplace (base, path, value, replace) {
         throw new Error('Out of bounds')
       }
 
-      if (replace === true) {
-        current.splice(index, 1, value)
-      } else {
-        current.splice(index, 0, value)
-      }
+      current.splice(index, replace ? 1 : 0, value)
     } else {
       current[pathPart] = value
     }

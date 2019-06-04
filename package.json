@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
-    "test": "eslint ./src ./test && node ./test/test.js",
+    "test": "eslint ./src ./test && microbundle && node ./test/test.js",
     "build": "microbundle",
     "dev": "microbundle watch",
     "lint": "eslint ./src ./test --fix"
