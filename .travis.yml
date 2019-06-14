@@ -8,5 +8,8 @@ matrix:
   include:
     - node_js: node
 
-before_script:
-  - npm audit
+jobs:
+  include:
+    - stage: NPM audit
+      script: npm audit
+      node_js: node
