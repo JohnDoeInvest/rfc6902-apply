@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - '10'
+  - '9'
+  - '8'
+  - '7'
+matrix:
+  include:
+    - node_js: node
+
+before_script:
+  - npm audit --json >> $TRAVIS_BUILD_DIR/audit/report.json
