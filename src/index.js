@@ -1,5 +1,6 @@
 function apply (base, patch) {
-  for (const operation of patch) {
+  for (var index in patch) {
+    var operation = patch[index]
     if (operation.op === 'add' || operation.op === 'replace') {
       if (operation.value === undefined) {
         throw new Error("Parameter 'value' required")
@@ -15,24 +16,24 @@ function apply (base, patch) {
       if (operation.from === undefined) {
         throw new Error("Parameter 'from' required")
       }
-      const value = getValue(base, operation.from)
+      var value = getValue(base, operation.from)
       if (value === undefined) {
         throw new Error("Location 'from' missing")
       }
       addOrReplace(base, operation.path, value, true)
     } else if (operation.op === 'move') {
-      const value = remove(base, operation.from)
-      addOrReplace(base, operation.path, value, true)
+      var removed = remove(base, operation.from)
+      addOrReplace(base, operation.path, removed, true)
     } else if (operation.op === 'test') {
       if (operation.value === undefined) {
         throw new Error("Parameter 'value' required")
       }
-      handleOperation((current, pathPart) => {
-        const key = Array.isArray(current)
+      handleOperation(function (current, pathPart) {
+        var key = Array.isArray(current)
           ? (pathPart === '-' ? current.length - 1 : pathPart)
           : pathPart
 
-        const value = current[key]
+        var value = current[key]
         if (!compare(value, operation.value)) {
           throw new Error('string not equivalent')
         }
@@ -46,17 +47,12 @@ function apply (base, patch) {
 }
 
 function addOrReplace (base, path, value, replace) {
-  handleOperation((current, pathPart) => {
+  handleOperation(function (current, pathPart) {
     if (Array.isArray(current)) {
       if (pathPart !== '-' && Number.isNaN(pathPart)) {
         throw new Error('Object operation on array')
       }
-
-      const index = pathPart === '-' ? current.length : pathPart
-      if (!/^\d+$/g.test(index)) throw new Error('Bad index')
-      if (index < 0 || index > current.length) {
-        throw new Error('Out of bounds')
-      }
+      var index = getAndCheckIndex(current, pathPart, 0)
 
       current.splice(index, replace ? 1 : 0, value)
     } else {
@@ -66,19 +62,15 @@ function addOrReplace (base, path, value, replace) {
 }
 
 function remove (base, path) {
-  return handleOperation((current, pathPart) => {
+  return handleOperation(function (current, pathPart) {
     if (Array.isArray(current)) {
-      const index = pathPart === '-' ? current.length - 1 : pathPart
-      if (!/^\d+$/g.test(index)) throw new Error('Bad index')
-      if (index < 0 || index >= current.length) {
-        throw new Error('Out of bounds')
-      }
+      var index = getAndCheckIndex(current, pathPart)
       return current.splice(index, 1)[0]
     } else {
       if (current[pathPart] === undefined) {
         throw new Error("Can't remove nonexistent field")
       }
-      const ret = current[pathPart]
+      var ret = current[pathPart]
       delete current[pathPart]
       return ret
     }
@@ -86,17 +78,9 @@ function remove (base, path) {
 }
 
 function getValue (base, path) {
-  return handleOperation((current, pathPart) => {
-    if (Array.isArray(current)) {
-      const index = pathPart === '-' ? current.length - 1 : pathPart
-      if (!/^\d+$/g.test(index)) throw new Error('Bad index')
-      if (index < 0 || index >= current.length) {
-        throw new Error('Out of bounds')
-      }
-      return current[index]
-    } else {
-      return current[pathPart]
-    }
+  return handleOperation(function (current, pathPart) {
+    var key = Array.isArray(current) ? getAndCheckIndex(current, pathPart) : pathPart
+    return current[key]
   }, base, path)
 }
 
@@ -105,10 +89,10 @@ function handleOperation (handle, base, path) {
     throw new Error('Incorrect JSON Pointer token')
   }
 
-  let current = base
-  const splitPath = path.split('/')
-  for (let i = 1; i < splitPath.length; i++) {
-    const pathPart = splitPath[i].replace('~1', '/').replace('~0', '~')
+  var current = base
+  var splitPath = path.split('/')
+  for (var i = 1; i < splitPath.length; i++) {
+    var pathPart = splitPath[i].replace('~1', '/').replace('~0', '~')
 
     if (i === splitPath.length - 1) {
       return handle(current, pathPart)
@@ -120,6 +104,16 @@ function handleOperation (handle, base, path) {
 
     current = current[pathPart]
   }
+}
+
+function getAndCheckIndex (current, pathPart, offset) {
+  offset = offset === undefined ? -1 : offset
+  var index = pathPart === '-' ? current.length + offset : pathPart
+  if (!/^\d+$/g.test(index)) throw new Error('Bad index')
+  if (index < 0 || index > current.length + offset) {
+    throw new Error('Out of bounds')
+  }
+  return index
 }
 
 /**
@@ -155,4 +149,4 @@ function compare (obj1, obj2) {
   return true
 };
 
-export default { apply }
+module.exports = { apply: apply }
