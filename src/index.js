@@ -125,7 +125,7 @@ function compare (obj1, obj2) {
   // Loop through properties in object 1
   for (var p in obj1) {
     // Check property exists on both objects
-    if (obj1.hasOwnProperty(p) !== obj2.hasOwnProperty(p)) return false
+    if (Object.prototype.hasOwnProperty.call(obj1, p) !== Object.prototype.hasOwnProperty.call(obj2, p)) return false
 
     switch (typeof (obj1[p])) {
       // Deep compare objects
