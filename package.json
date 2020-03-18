@@ -1,6 +1,6 @@
 {
   "name": "rfc6902-apply",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Allows patching a object using a patch created with RFC 6902.",
   "main": "dist/index.js",
   "scripts": {
