@@ -5,20 +5,18 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "eslint ./src ./test && node ./test/test.js",
-    "build": "mkdirp dist && uglifyjs --compress --mangle -o dist/index.js src/index.js",
+    "build": "esbuild src/index.js --bundle --minify --outdir=dist",
     "lint": "eslint ./src ./test --fix"
   },
   "author": "Henrik Olsson <henrik.olsson@outlook.com>",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^7.29.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.3.1",
-    "minify": "^4.1.1",
-    "mkdirp": "^0.5.3",
-    "uglify-js": "^3.6.0"
+    "esbuild": "^0.18.2",
+    "eslint": "^8.42.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-n": "^16.0.0",
+    "eslint-plugin-promise": "^6.1.1"
   },
   "dependencies": {}
 }
